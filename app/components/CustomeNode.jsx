@@ -1,13 +1,27 @@
+import { useState } from "react";
+
 const ImageNode = ({ data }) => {
-  console.log(data);
+  const [images, setImages] = useState([data.url]);
+
   return (
     <>
-      <img
-        onDragOver={(e) => console.log("on me")}
-        style={{ height: "67px" }}
-        src={data.url}
-        alt="hello"
-      />
+      {images?.map((img, id) => {
+        return (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            key={id}
+            onDrop={(e) => {
+              e.preventDefault();
+              const type = e.dataTransfer.getData("application/reactflow");
+              console.log("type", type);
+              setImages([...images, type]);
+            }}
+            style={{ height: "67px" }}
+            src={img}
+            alt="hello"
+          />
+        );
+      })}
     </>
   );
 };

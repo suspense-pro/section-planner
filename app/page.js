@@ -15,32 +15,7 @@ import ReactFlow, {
 } from "react-flow-renderer";
 import "reactflow/dist/style.css";
 import CustomNode from "./components/CustomeNode";
-const imageUrls = [
-  "https://s3.ca-central-1.amazonaws.com/exocortex-crateandbarrel/exocortex-crateandbarrel/SectionalPlanner/661_82/item_661_82_2480_0.thumb.jpg?v=73",
-  "https://s3.ca-central-1.amazonaws.com/exocortex-crateandbarrel/exocortex-crateandbarrel/SectionalPlanner/661_172/item_661_172_2480_0.thumb.jpg?v=73",
-  "https://s3.ca-central-1.amazonaws.com/exocortex-crateandbarrel/exocortex-crateandbarrel/SectionalPlanner/661_58/item_661_58_2480_0.thumb.jpg?v=73",
-  "https://s3.ca-central-1.amazonaws.com/exocortex-crateandbarrel/exocortex-crateandbarrel/SectionalPlanner/661_108/item_661_108_2480_0.thumb.jpg?v=73",
-  "https://s3.ca-central-1.amazonaws.com/exocortex-crateandbarrel/exocortex-crateandbarrel/SectionalPlanner/661_149/item_661_149_2480_0.thumb.jpg?v=73",
-  "https://s3.ca-central-1.amazonaws.com/exocortex-crateandbarrel/exocortex-crateandbarrel/SectionalPlanner/661_150/item_661_150_2480_0.thumb.jpg?v=73",
-  "https://s3.ca-central-1.amazonaws.com/exocortex-crateandbarrel/exocortex-crateandbarrel/SectionalPlanner/661_157/item_661_157_2480_0.thumb.jpg?v=73",
-  "https://s3.ca-central-1.amazonaws.com/exocortex-crateandbarrel/exocortex-crateandbarrel/SectionalPlanner/661_158/item_661_158_2480_0.thumb.jpg?v=73",
-  "https://s3.ca-central-1.amazonaws.com/exocortex-crateandbarrel/exocortex-crateandbarrel/SectionalPlanner/661_627/item_661_627_2480_0.thumb.jpg?v=73",
-  "https://s3.ca-central-1.amazonaws.com/exocortex-crateandbarrel/exocortex-crateandbarrel/SectionalPlanner/661_78/item_661_78_2480_0.thumb.jpg?v=73",
-  "https://s3.ca-central-1.amazonaws.com/exocortex-crateandbarrel/exocortex-crateandbarrel/SectionalPlanner/661_628/item_661_628_2480_0.thumb.jpg?v=73",
-  "https://s3.ca-central-1.amazonaws.com/exocortex-crateandbarrel/exocortex-crateandbarrel/SectionalPlanner/661_79/item_661_79_2480_0.thumb.jpg?v=73",
-  "https://s3.ca-central-1.amazonaws.com/exocortex-crateandbarrel/exocortex-crateandbarrel/SectionalPlanner/661_389/item_661_389_2480_0.thumb.jpg?v=73",
-  "https://s3.ca-central-1.amazonaws.com/exocortex-crateandbarrel/exocortex-crateandbarrel/SectionalPlanner/661_390/item_661_390_2480_0.thumb.jpg?v=73",
-  "https://s3.ca-central-1.amazonaws.com/exocortex-crateandbarrel/exocortex-crateandbarrel/SectionalPlanner/661_64/item_661_64_2480_0.thumb.jpg?v=73",
-  "https://s3.ca-central-1.amazonaws.com/exocortex-crateandbarrel/exocortex-crateandbarrel/SectionalPlanner/661_66/item_661_66_2480_0.thumb.jpg?v=73",
-  "https://s3.ca-central-1.amazonaws.com/exocortex-crateandbarrel/exocortex-crateandbarrel/SectionalPlanner/661_83/item_661_83_2480_0.thumb.jpg?v=73",
-  "https://s3.ca-central-1.amazonaws.com/exocortex-crateandbarrel/exocortex-crateandbarrel/SectionalPlanner/661_84/item_661_84_2480_0.thumb.jpg?v=73",
-  "https://s3.ca-central-1.amazonaws.com/exocortex-crateandbarrel/exocortex-crateandbarrel/SectionalPlanner/661_674/item_661_674_2480_0.thumb.jpg?v=73",
-  "https://s3.ca-central-1.amazonaws.com/exocortex-crateandbarrel/exocortex-crateandbarrel/SectionalPlanner/661_675/item_661_675_2480_0.thumb.jpg?v=73",
-  "https://s3.ca-central-1.amazonaws.com/exocortex-crateandbarrel/exocortex-crateandbarrel/SectionalPlanner/661_358/item_661_358_2480_0.thumb.jpg?v=73",
-  "https://s3.ca-central-1.amazonaws.com/exocortex-crateandbarrel/exocortex-crateandbarrel/SectionalPlanner/661_691/item_661_691_2480_0.thumb.jpg?v=73",
-  "https://s3.ca-central-1.amazonaws.com/exocortex-crateandbarrel/exocortex-crateandbarrel/SectionalPlanner/661_690/item_661_690_2480_0.thumb.jpg?v=73",
-  "https://s3.ca-central-1.amazonaws.com/exocortex-crateandbarrel/exocortex-crateandbarrel/SectionalPlanner/661_709/item_661_709_2480_0.thumb.jpg?v=73",
-];
+import { sectionalPieces } from "./data/sofas";
 
 let id = 0;
 const getId = () => `dndnode_${id++}`;
@@ -49,7 +24,16 @@ const Home = () => {
   const reactFlowWrapper = useRef(null);
 
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
-  const [nodes, setNodes] = useState([]);
+  const [nodes, setNodes] = useState([
+    {
+      id: getId(),
+      type: "imgNode",
+      position: { x: 150, y: 150 },
+      data: {
+        url: "https://s3.ca-central-1.amazonaws.com/exocortex-crateandbarrel/exocortex-crateandbarrel/SectionalPlanner/661_82/item_661_82_2480_0.thumb.jpg?v=73",
+      },
+    },
+  ]);
   const nodeTypes = useMemo(() => ({ imgNode: CustomNode }), []);
 
   const onNodesChange = useCallback(
@@ -60,8 +44,6 @@ const Home = () => {
   const handleDragStart = (e, url) => {
     e.dataTransfer.setData("application/reactflow", url);
     e.dataTransfer.effectAllowed = "move";
-
-    console.log("eve", e);
   };
 
   const onDragOver = useCallback((event) => {
@@ -146,14 +128,14 @@ const Home = () => {
         <div className={styles.sofas_container}>
           <div className={styles.heading}>Sectional Sofa Pieces</div>
           <div className={styles.sofas}>
-            {imageUrls.map((url) => (
-              <div className={styles.img_container} key={url}>
+            {sectionalPieces.map((sofa) => (
+              <div className={styles.img_container} key={sofa.id}>
                 <Image
-                  onDragStart={(e) => handleDragStart(e, url)}
+                  onDragStart={(e) => handleDragStart(e, sofa.image)}
                   className={styles.img}
-                  src={url}
+                  src={sofa.image}
                   alt="url"
-                  fill={true}
+                  fill
                   draggable
                 />
               </div>

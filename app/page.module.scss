@@ -36,8 +36,8 @@
 
       .sofas {
         flex: 1;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
+        // display: grid;
+        // grid-template-columns: 1fr 1fr;
         overflow-y: scroll;
 
         .img_container {

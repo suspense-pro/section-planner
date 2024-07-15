@@ -11,7 +11,7 @@ const Home = () => {
       .filter((piece) => piece.show_default)
       .map((piece) => ({
         id: piece.id,
-        uid:piece.uid,
+        uid: piece.uid,
         image: piece.image,
         isPlaceholder: false,
       }))
@@ -83,15 +83,13 @@ const Home = () => {
       newNodes.splice(index, 0, {
         ...piece,
         id: `node-${idCounter}`, // Generate unique ID using counter
-        uid:piece.id,
+        uid: piece.id,
         isPlaceholder: false,
       });
       setNodes(newNodes);
       setIdCounter(idCounter + 1); // Increment the counter
     } else {
-      alert(
-        "This piece cannot be placed between the existing components."
-      );
+      alert("This piece cannot be placed between the existing components.");
     }
   };
 
@@ -147,15 +145,11 @@ const Home = () => {
       };
 
       const canPlaceRight = (piece, id) => {
-        return piece.in_between.some(
-          (ib) => ib.right && ib.right.includes(id)
-        );
+        return piece.in_between.some((ib) => ib.right && ib.right.includes(id));
       };
 
       const canPlaceLeft = (piece, id) => {
-        return piece.in_between.some(
-          (ib) => ib.left && ib.left.includes(id)
-        );
+        return piece.in_between.some((ib) => ib.left && ib.left.includes(id));
       };
 
       if (canPlaceBetween(draggedPiece, index)) {
@@ -165,7 +159,6 @@ const Home = () => {
             className={`${styles.placeholder} ${styles.validDrop}`}
             onDragOver={onDragOver}
             onDrop={(e) => onDropCanvas(e, index)}
-            style={{ height: 150, width: 60 }}
           >
             <span className={styles.addIcon}>+</span>
           </div>
@@ -177,9 +170,18 @@ const Home = () => {
             className={`${styles.placeholder} ${styles.invalidDrop}`}
             onDragOver={onDragOver}
             onDrop={(e) => onDropCanvas(e, index)}
-            style={{ height: 150, width: 60 }}
           >
-            <span className={styles.crossIcon}>X</span>
+            <span className={styles.crossIcon}>
+              <svg
+                width="24px"
+                height="24px"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M12.5 2.2a10.3 10.3 0 1 0 10.3 10.3A10.299 10.299 0 0 0 12.5 2.2zm0 19.6a9.3 9.3 0 1 1 9.3-9.3 9.31 9.31 0 0 1-9.3 9.3zM13 12h5v1h-5v5h-1v-5H7v-1h5V7h1z" />
+                <path fill="none" d="M0 0h24v24H0z" />
+              </svg>
+            </span>
           </div>
         );
       }
@@ -201,36 +203,28 @@ const Home = () => {
     );
   };
 
-
-  
   const handleNodeDragStart = (e, node) => {
-    e.dataTransfer.setData('nodeId', node.id);
-    e.dataTransfer.effectAllowed = 'move';
-    
+    e.dataTransfer.setData("nodeId", node.id);
+    e.dataTransfer.effectAllowed = "move";
   };
-  
+
   const handleNodeDragEnd = (e) => {
     e.preventDefault();
   };
 
-
-
   const [isInDragState, setIsInDragState] = useState(false);
-
 
   const handleNodeDrop = (e, index) => {
     e.preventDefault();
-   //const nodeId = e.dataTransfer.getData('nodeId');
-   // setNodes((prevNodes) => prevNodes.filter(node => node.id !== nodeId));
+    //const nodeId = e.dataTransfer.getData('nodeId');
+    // setNodes((prevNodes) => prevNodes.filter(node => node.id !== nodeId));
   };
 
   const handleStartOverDrop = (e) => {
     e.preventDefault();
-    const nodeId = e.dataTransfer.getData('nodeId');
-    setNodes((prevNodes) => prevNodes.filter(node => node.id !== nodeId));
+    const nodeId = e.dataTransfer.getData("nodeId");
+    setNodes((prevNodes) => prevNodes.filter((node) => node.id !== nodeId));
   };
-
-  
 
   return (
     <div className={styles.container}>
@@ -273,10 +267,11 @@ const Home = () => {
               </div>
             ))}
           </div>
-          <div 
-              onDragOver={(e) => e.preventDefault()}
-              onDrop={handleStartOverDrop}
-          className={styles.btn_container}>
+          <div
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={handleStartOverDrop}
+            className={styles.btn_container}
+          >
             <div className={styles.button} onClick={startOver}>
               Start Over
             </div>
@@ -288,7 +283,3 @@ const Home = () => {
 };
 
 export default Home;
-
-
-
-

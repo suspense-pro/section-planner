@@ -19,7 +19,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      flex-wrap: wrap;
+      // flex-wrap: wrap;
     }
 
     .sofas_container {
@@ -91,10 +91,27 @@
 }
 
 .placeholder {
-  height: 80px;
+  height: 120px;
   background-color: #cccccc41;
   width: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.placeholderRed {
+  height: 120px;
+  background-color: #ff63633a;
+  width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: red;
+}
+
+.rightArmBumper {
+  height: 183px;
+}
+
+.normalImage {
+  height: 120px;
 }

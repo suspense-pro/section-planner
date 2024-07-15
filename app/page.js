@@ -20,12 +20,6 @@ const Home = () => {
 
   const [isDragging, setIsDragging] = useState(false);
 
-  const handleDragStart = (e, piece) => {
-    e.dataTransfer.setData("application/reactflow", JSON.stringify(piece));
-    e.dataTransfer.effectAllowed = "move";
-    setIsDragging(true);
-  };
-
   const handleDragEnd = () => {
     setIsDragging(false);
   };
@@ -39,6 +33,35 @@ const Home = () => {
     e.preventDefault();
     setIsDragging(false);
     const piece = JSON.parse(e.dataTransfer.getData("application/reactflow"));
+
+    console.log(nodes[nodes.length - 1].uid);
+    const newNodes = [...nodes];
+    let obj = {
+      ...piece,
+      id: `node-${idCounter}`, // Generate unique ID using counter
+      uid: piece.id,
+      isPlaceholder: false,
+      className:
+        piece?.name === "Gather Deep Right-Arm Bumper" ||
+        piece?.name === "Gather Deep Left-Arm Bumper"
+          ? "rightArmBumper"
+          : "",
+    };
+    if (nodes[nodes.length - 1].name !== "Gather Deep Right-Arm Bumper") {
+      if (piece?.name === "Gather Deep Right-Arm Bumper") {
+        setNodes([...newNodes, obj]);
+        return;
+      }
+    }
+    if (
+      nodes[0].name !== "Gather Deep Left-Arm Bumper" ||
+      nodes[0].name !== "Gather Deep Corner"
+    ) {
+      if (piece?.name === "Gather Deep Left-Arm Bumper") {
+        setNodes([obj, ...newNodes]);
+        return;
+      }
+    }
 
     const canPlaceBetween = (piece, index) => {
       const beforePiece = nodes[index - 1];
@@ -79,13 +102,7 @@ const Home = () => {
     };
 
     if (canPlaceBetween(piece, index)) {
-      const newNodes = [...nodes];
-      newNodes.splice(index, 0, {
-        ...piece,
-        id: `node-${idCounter}`, // Generate unique ID using counter
-        uid: piece.id,
-        isPlaceholder: false,
-      });
+      newNodes.splice(index, 0, obj);
       setNodes(newNodes);
       setIdCounter(idCounter + 1); // Increment the counter
     } else {
@@ -100,11 +117,55 @@ const Home = () => {
     setNodes(filteredNodes);
   };
 
-  const renderPlaceholder = (index, validDrop) => {
+  const handleDragStart = (e, piece) => {
+    e.dataTransfer.setData("application/reactflow", JSON.stringify(piece));
+    localStorage.setItem("application/reactflow", JSON.stringify(piece));
+    e.dataTransfer.effectAllowed = "move";
+    setIsDragging(true);
+  };
+
+  const renderPlaceholder = (index, validDrop, dir) => {
     if (isDragging && index > 0 && index < nodes.length) {
       const draggedPiece = JSON.parse(
         localStorage.getItem("application/reactflow")
       );
+
+      const RightPlaceholder = () => {
+        return (
+          <div
+            key={`placeholder-${index}`}
+            className={`${styles.placeholder} ${styles.invalidDrop}`}
+            onDragOver={onDragOver}
+            onDrop={(e) => onDropCanvas(e, index)}
+          >
+            <span className={styles.crossIcon}>
+              <svg
+                width="24px"
+                height="24px"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M12.5 2.2a10.3 10.3 0 1 0 10.3 10.3A10.299 10.299 0 0 0 12.5 2.2zm0 19.6a9.3 9.3 0 1 1 9.3-9.3 9.31 9.31 0 0 1-9.3 9.3zM13 12h5v1h-5v5h-1v-5H7v-1h5V7h1z" />
+                <path fill="none" d="M0 0h24v24H0z" />
+              </svg>
+            </span>
+          </div>
+        );
+      };
+      const WrongPlaceholder = () => {
+        return (
+          <div
+            key={`placeholder-${index}`}
+            className={`${styles.placeholderRed} ${styles.validDrop}`}
+            onDragOver={onDragOver}
+            onDrop={(e) => onDropCanvas(e, index)}
+          >
+            <span className={styles.crossIcon}>&#128711;</span>
+          </div>
+        );
+      };
+
+      console.log("DRAGGED_PIECE", draggedPiece);
 
       const canPlaceBetween = (piece, index) => {
         const beforePiece = nodes[index - 1];
@@ -151,39 +212,20 @@ const Home = () => {
       const canPlaceLeft = (piece, id) => {
         return piece.in_between.some((ib) => ib.left && ib.left.includes(id));
       };
+      draggedPiece?.name === "name";
 
-      if (canPlaceBetween(draggedPiece, index)) {
-        return (
-          <div
-            key={`placeholder-${index}`}
-            className={`${styles.placeholder} ${styles.validDrop}`}
-            onDragOver={onDragOver}
-            onDrop={(e) => onDropCanvas(e, index)}
-          >
-            <span className={styles.addIcon}>+</span>
-          </div>
-        );
+      if (dir === "Right") {
+        return <RightPlaceholder />;
+      }
+      if (dir === "Left") {
+        return <RightPlaceholder />;
+      }
+
+      // if (canPlaceBetween(draggedPiece, index)) {
+      if (draggedPiece?.name !== "Gather Deep Corner") {
+        return <RightPlaceholder />;
       } else {
-        return (
-          <div
-            key={`placeholder-${index}`}
-            className={`${styles.placeholder} ${styles.invalidDrop}`}
-            onDragOver={onDragOver}
-            onDrop={(e) => onDropCanvas(e, index)}
-          >
-            <span className={styles.crossIcon}>
-              <svg
-                width="24px"
-                height="24px"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M12.5 2.2a10.3 10.3 0 1 0 10.3 10.3A10.299 10.299 0 0 0 12.5 2.2zm0 19.6a9.3 9.3 0 1 1 9.3-9.3 9.31 9.31 0 0 1-9.3 9.3zM13 12h5v1h-5v5h-1v-5H7v-1h5V7h1z" />
-                <path fill="none" d="M0 0h24v24H0z" />
-              </svg>
-            </span>
-          </div>
-        );
+        return <WrongPlaceholder />;
       }
     }
 
@@ -230,28 +272,48 @@ const Home = () => {
     <div className={styles.container}>
       <div className={styles.section_planner}>
         <div ref={reactFlowWrapper} className={styles.canvas}>
-          {nodes.map((node, index) => (
-            <React.Fragment key={node.id}>
-              {renderPlaceholder(index, true)}
-              <div
-                className={styles.component}
-                draggable
-                onDragStart={(e) => handleNodeDragStart(e, node)}
-                onDragEnd={handleNodeDragEnd}
-                onDragOver={onDragOver}
-                onDrop={(e) => handleNodeDrop(e, index)}
-              >
-                <img src={node.image} alt={node.name} style={{ height: 80 }} />
-              </div>
-            </React.Fragment>
-          ))}
+          <div style={{ display: "flex" }}>
+            {/* {nodes[0]?.name !== 6 &&
+              renderPlaceholder(nodes.length - 1, true, "Left")} */}
+            {/* {nodes[0].uid !== 1 &&
+              renderPlaceholder(nodes.length - 1, true, "Left")} */}
+            {nodes.map((node, index) => (
+              <>
+                <React.Fragment key={node.uid}>
+                  {renderPlaceholder(index, true)}
+                  <div
+                    className={styles.component}
+                    draggable
+                    onDragStart={(e) => handleNodeDragStart(e, node)}
+                    onDragEnd={handleNodeDragEnd}
+                    onDragOver={onDragOver}
+                    onDrop={(e) => handleNodeDrop(e, index)}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={node.image}
+                      alt={node.name}
+                      // style={{ height: 120 }}
+                      className={`${
+                        node?.className === "rightArmBumper"
+                          ? styles.rightArmBumper
+                          : styles.normalImage
+                      }`}
+                    />
+                  </div>
+                </React.Fragment>
+              </>
+            ))}
+            {nodes[nodes.length - 1].name !== "Gather Deep Right-Arm Bumper" &&
+              renderPlaceholder(nodes.length - 1, true, "Right")}
+          </div>
         </div>
         <div className={styles.sofas_container}>
           <div className={styles.heading}>Sectional Sofa Pieces</div>
           <div className={styles.sofas}>
             {sectionalPieces.map((sofa) => (
               <div
-                className={styles.img_container}
+                className={`${styles.img_container}`}
                 key={sofa.id}
                 onDragStart={(e) => handleDragStart(e, sofa)}
                 onDragEnd={handleDragEnd}

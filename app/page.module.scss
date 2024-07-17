@@ -19,7 +19,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      // flex-wrap: wrap;
+      flex-wrap: wrap;
     }
 
     .sofas_container {
@@ -36,8 +36,8 @@
 
       .sofas {
         flex: 1;
-        // display: grid;
-        // grid-template-columns: 1fr 1fr;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
         overflow-y: scroll;
 
         .img_container {
@@ -110,8 +110,21 @@
 
 .rightArmBumper {
   height: 183px;
+  &:hover {
+    cursor: pointer;
+    filter: brightness(0.8);
+    border-radius: 0 0 6px 6px;
+  }
 }
 
 .normalImage {
   height: 120px;
+  background-color: #000;
+  position: relative;
+
+  &:hover {
+    cursor: pointer;
+    filter: brightness(0.8);
+    border-radius: 0 0 6px 6px;
+  }
 }

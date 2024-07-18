@@ -125,11 +125,23 @@
   }
 }
 
+// .img_container {
+//   position: relative;
+//   height: 100px;
+//   width: 100%;
+//   display: flex;
+
 .normalImage {
-  width: auto !important;
+  // min-width: 120px;
+  
+  width: auto;
+  grid-template-columns: 1fr;
   height: 120px;
-  background-color: #000;
   position: relative;
+
+  .canvasImg {
+    width: auto;
+  }
 
   &:hover {
     cursor: pointer;

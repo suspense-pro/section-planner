@@ -33,7 +33,7 @@ const WrongPlaceholder = React.memo(({ index, onDragOver }) => {
     <div
       className={`${styles.placeholderRed} ${styles.validDrop}`}
       onDragOver={onDragOver}
-      onDrop={(e) => alert("sofa piece doesn't fit")}
+      onDrop={(e) => alert("sofa piece doesn't fit : (")}
     >
       <span className={styles.crossIcon}>&#128711;</span>
     </div>
@@ -70,31 +70,34 @@ const Home = () => {
     }
   };
 
-  const onDropCanvas = useCallback((e, index) => {
-    e.preventDefault();
-    setIsDragging(false);
-    const piece = JSON.parse(e.dataTransfer.getData("application/reactflow"));
+  const onDropCanvas = useCallback(
+    (e, index) => {
+      e.preventDefault();
+      setIsDragging(false);
+      const piece = JSON.parse(e.dataTransfer.getData("application/reactflow"));
 
-    const newNodes = [...nodes];
-    let newNode = {
-      ...piece,
-      id: generateUniqueId(),
-      uid: piece.id,
-    };
+      const newNodes = [...nodes];
+      let newNode = {
+        ...piece,
+        id: generateUniqueId(),
+        uid: piece.id,
+      };
 
-    if (nodes.length === 0) {
-      setNodes([newNode]);
-      return;
-    }
+      if (nodes.length === 0) {
+        setNodes([newNode]);
+        return;
+      }
 
-    if (nodes.length === 1) {
-      newNodes.splice(index, 0, newNode);
-    } else {
-      newNodes.splice(index, 0, newNode);
-    }
+      if (nodes.length === 1) {
+        newNodes.splice(index, 0, newNode);
+      } else {
+        newNodes.splice(index, 0, newNode);
+      }
 
-    setNodes(newNodes);
-  }, [nodes]);
+      setNodes(newNodes);
+    },
+    [nodes]
+  );
 
   const handleDragStart = (e, piece) => {
     e.dataTransfer.setData("application/reactflow", JSON.stringify(piece));
@@ -116,29 +119,41 @@ const Home = () => {
     }
 
     if (isDragging) {
-      if (
-        pos === "start" &&
-        !leftSofas.includes(id)
-      ) {
+      if (pos === "start" && !leftSofas.includes(id)) {
         if (!rightSofas.includes(draggedPiece.uid)) {
-          return <RightPlaceholder index={index} onDropCanvas={onDropCanvas} onDragOver={onDragOver} />;
+          return (
+            <RightPlaceholder
+              index={index}
+              onDropCanvas={onDropCanvas}
+              onDragOver={onDragOver}
+            />
+          );
         } else {
           return <WrongPlaceholder index={index} onDragOver={onDragOver} />;
         }
       }
-      if (
-        pos === "end" &&
-        !rightSofas.includes(id)
-      ) {
+      if (pos === "end" && !rightSofas.includes(id)) {
         if (!leftSofas.includes(draggedPiece.uid)) {
-          return <RightPlaceholder index={index} onDropCanvas={onDropCanvas} onDragOver={onDragOver} />;
+          return (
+            <RightPlaceholder
+              index={index}
+              onDropCanvas={onDropCanvas}
+              onDragOver={onDragOver}
+            />
+          );
         } else {
           return <WrongPlaceholder index={index} onDragOver={onDragOver} />;
         }
       }
       if (index > 0 && index < nodes.length) {
         if (middleSofas.includes(draggedPiece.uid)) {
-          return <RightPlaceholder index={index} onDropCanvas={onDropCanvas} onDragOver={onDragOver} />;
+          return (
+            <RightPlaceholder
+              index={index}
+              onDropCanvas={onDropCanvas}
+              onDragOver={onDragOver}
+            />
+          );
         } else {
           return <WrongPlaceholder index={index} onDragOver={onDragOver} />;
         }
@@ -182,22 +197,33 @@ const Home = () => {
               <React.Fragment key={node.id}>
                 {renderPlaceholder(index, "", node.uid)}
                 <div
-                  className={styles.component}
                   draggable
                   onDragStart={(e) => handleNodeDragStart(e, node)}
                   onDragEnd={handleNodeDrop}
                   onDragOver={onDragOver}
+                  className={`${styles.normalImage} ${
+                    [17, 18].includes(node?.uid) && styles.threeSofaPiece
+                  } ${
+                    [9, 10, 11, 12, 13, 14].includes(node?.uid) &&
+                    styles.rightArmBumper
+                  }`}
                 >
-                  <img
+                  <Image
                     src={node.image}
                     alt={node.name}
-                    className={`${
-                      [17, 18].includes(node?.uid) && styles.threeSofaPiece
-                    } ${
-                      [9, 10, 11, 12, 13, 14].includes(node?.uid)
-                        ? styles.rightArmBumper
-                        : styles.normalImage
-                    }`}
+                    width={0}
+                    height={0}
+                    sizes="100vw"
+                    style={{
+                      width: "auto",
+                      height: `${
+                        [17, 18].includes(node?.uid)
+                          ? "300px"
+                          : [9, 10, 11, 12, 13, 14].includes(node?.uid)
+                          ? "183px"
+                          : "120px"
+                      }`,
+                    }}
                   />
                 </div>
               </React.Fragment>

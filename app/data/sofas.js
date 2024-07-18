@@ -1,17 +1,20 @@
 export const sectionalPieces = [
   {
+    width: 121.2,
     id: 1,
     uid: 1,
     image:
       "https://s3.ca-central-1.amazonaws.com/exocortex-crateandbarrel/exocortex-crateandbarrel/SectionalPlanner/661_82/item_661_82_2480_0.thumb.jpg?v=73",
   },
   {
+    width: 121.2,
     id: 2,
     uid: 2,
     image:
-      "https://s3.ca-central-1.amazonaws.com/exocortex-crateandbarrel/exocortex-crateandbarrel/SectionalPlanner/661_172/item_661_172_2480_0.thumb.jpg?v=73",
+    "https://s3.ca-central-1.amazonaws.com/exocortex-crateandbarrel/exocortex-crateandbarrel/SectionalPlanner/661_172/item_661_172_2480_0.thumb.jpg?v=73",
   },
   {
+    width: 100.59,
     id: 3,
     uid: 3,
     image:
